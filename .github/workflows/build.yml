@@ -14,7 +14,8 @@ jobs:
         run: docker compose up -d --build --wait
       - name: Exercise product and order endpoints
         run: |
-          curl --fail --retry 10 --retry-delay 3 --retry-connrefused http://localhost:5001/products
+          curl --fail --retry 20 --retry-delay 2 --retry-all-errors http://localhost:5001/products
+          curl --fail --retry 20 --retry-delay 2 --retry-all-errors http://localhost:5002/swagger/index.html
           curl --fail -H 'Content-Type: application/json' -d '{"name":"Keyboard","price":120}' http://localhost:5001/products
           curl --fail -H 'Content-Type: application/json' -d '{"productId":1,"quantity":2}' http://localhost:5002/orders
       - name: Dump logs on failure
