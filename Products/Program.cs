@@ -5,6 +5,7 @@ using System.Text.Json;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ProductDb>(o => o.UseSqlite(builder.Configuration.GetConnectionString("Database") ?? "Data Source=products.db"));
 builder.Services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(builder.Configuration["Redis"] ?? "localhost:6379"));
+builder.Services.AddHostedService<OrderConsumer>();
 builder.Services.AddEndpointsApiExplorer(); builder.Services.AddSwaggerGen();
 var app = builder.Build();
 using (var scope = app.Services.CreateScope()) scope.ServiceProvider.GetRequiredService<ProductDb>().Database.EnsureCreated();
